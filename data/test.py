@@ -5,7 +5,7 @@ import PIL as PIL
 image_path = "data/cropped/cropped_2023_B04_20m.jp2"
 image_path1 = "data/cropped/cropped_2024_B04_20m.jp2"
 image_path2 = "data/cropped/cropped_2023_B8A_20m.jp2"
-image_path3 = "data/cropped/cropped_2023_B8A_20m.jp2"
+image_path3 = "data/cropped/cropped_2024_B8A_20m.jp2"
 
 def display_image(ax, image_path, title):
     with rasterio.open(image_path) as src:

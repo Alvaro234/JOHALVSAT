@@ -31,7 +31,7 @@ def display_image(image_path):
 
 # Replace these paths with your actual paths
 input_image_path = "data/raw/2024_B04_20m.jp2"
-output_image_path = "cropped_2024_B04_20m.jp2"
+output_image_path = "data/cropped/cropped_2024_B04_20m.jp2"
 
 # Recognise boundary
 with rasterio.open(input_image_path) as src:
