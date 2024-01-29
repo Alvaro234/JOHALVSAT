@@ -19,12 +19,6 @@ def crop_image(input_image_path, output_image_path, crop_geometry):
     with rasterio.open(output_image_path, "w", **out_meta) as dest:
         dest.write(out_image)
 
-def display_image(image_path):
-    with rasterio.open(image_path) as src:
-        plt.imshow(src.read(1), cmap='viridis')
-        plt.title("Cropped Image")
-        plt.show()
-
 def crop_images_in_folder(input_folder, output_folder, crop_geometry):
     # Create the output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
@@ -56,7 +50,7 @@ bottom_right_x, bottom_right_y = src.bounds.right, src.bounds.bottom
 
 # Calculate the coordinates for the top half of the image (KEEP THIS PARAMETERS LIKE THIS AND DO NOT TOUCH THEM)
 crop_minx, crop_miny = top_left_x*1.02, top_left_y
-crop_maxx, crop_maxy = (top_left_x + bottom_right_x) /2.0099, (top_left_y + bottom_right_y) / 1.987
+crop_maxx, crop_maxy = (top_left_x + bottom_right_x) /2.0000, (top_left_y + bottom_right_y) / 1.987
 
 # Create a bounding box geometry
 crop_geometry = box(crop_minx, crop_miny, crop_maxx, crop_maxy)
@@ -65,3 +59,31 @@ print(f"{crop_geometry}")
 
 # Call the function to crop all images in the folder
 crop_images_in_folder(input_folder, output_folder, crop_geometry)
+
+
+
+
+## Debugging
+
+image_path = "data/cropped/cropped_2023_B04_10m.jp2"
+image_path1 = "data/cropped/cropped_2024_B04_10m.jp2"
+image_path2 = "data/cropped/cropped_2023_B08_10m.jp2"
+image_path3 = "data/cropped/cropped_2024_B08_10m.jp2"
+
+def display_image(ax, image_path, title):
+    with rasterio.open(image_path) as src:
+        ax.imshow(src.read(1), cmap='gray')
+        ax.set_title(title)
+        ax.axis('off')
+        
+# Create a 2x2 subplot layout
+fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+
+# Display each image in a subplot
+display_image(axs[0, 0], image_path, "Image 1")
+display_image(axs[0, 1], image_path1, "Image 2")
+display_image(axs[1, 0], image_path2, "Image 3")
+display_image(axs[1, 1], image_path3, "Image 4")
+
+plt.tight_layout()
+plt.show()
