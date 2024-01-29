@@ -69,4 +69,4 @@ for i in range(num_images, rows * cols):
     axs.flatten()[i].axis('off')
 
 plt.tight_layout()
-plt.show()
+plt.show() #djgsodg

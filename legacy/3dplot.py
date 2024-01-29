@@ -26,4 +26,4 @@ ax.set_zlabel('Z')
 fig.colorbar(surface, shrink=0.5, aspect=5)
 
 # Show the plot
-plt.show()
+plt.show() #lfjgpisdrtghji¨0
