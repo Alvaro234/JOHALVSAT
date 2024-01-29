@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define the directory where your satellite images are stored
-image_dir = r'C:\Users\alvar\Desktop\Python\JOHALVSAT\data'
+image_dir = r'data'
 
 # Create empty lists to store image data, years, months, and approximate NDVI values
 image_data = []
