@@ -1,11 +1,8 @@
+import os
 import rasterio
 from rasterio.mask import mask
 from shapely.geometry import box
-import geopandas as gpd
 import matplotlib.pyplot as plt
-#input_image_path = "2023_B04_20m.jp2"
-#output_image_path = "cropped_2023_B04_20m.jp2"
-#crop_geometry = {"type":"Polygon","coordinates":[[[-6.16516,36.989391],[-6.482608,36.989391],[-6.482608,36.791689],[-6.16516,36.791689],[-6.16516,36.989391]]]}
 
 def crop_image(input_image_path, output_image_path, crop_geometry):
     with rasterio.open(input_image_path) as src:
@@ -26,15 +23,27 @@ def display_image(image_path):
     with rasterio.open(image_path) as src:
         plt.imshow(src.read(1), cmap='viridis')
         plt.title("Cropped Image")
-        #plt.colorbar()
         plt.show()
 
+def crop_images_in_folder(input_folder, output_folder, crop_geometry):
+    # Create the output folder if it doesn't exist
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Loop through all files in the input folder
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".jp2"):
+            input_image_path = os.path.join(input_folder, filename)
+            output_image_path = os.path.join(output_folder, f"cropped_{filename}")
+
+            crop_image(input_image_path, output_image_path, crop_geometry)
+            print(f"Image cropped successfully: {output_image_path}")
+
 # Replace these paths with your actual paths
-input_image_path = "data/raw/2024_B04_20m.jp2"
-output_image_path = "data/cropped/cropped_2024_B04_20m.jp2"
+input_folder = "data/raw"  # Replace with the path to your folder containing images
+output_folder = "data/cropped"  # Replace with the path to the output folder
 
 # Recognise boundary
-with rasterio.open(input_image_path) as src:
+with rasterio.open("data/raw/2021_B04_10m.jp2") as src:
     # Get the coordinates of the top-left and bottom-right corners
     top_left = (src.bounds.left, src.bounds.top)
     bottom_right = (src.bounds.right, src.bounds.bottom)
@@ -54,9 +63,5 @@ crop_geometry = box(crop_minx, crop_miny, crop_maxx, crop_maxy)
 
 print(f"{crop_geometry}")
 
-# Call the function to crop the image
-crop_image(input_image_path, output_image_path, crop_geometry)
-
-print(f"Image cropped successfully. Cropped image saved at {output_image_path}")
-
-#display_image(output_image_path)
+# Call the function to crop all images in the folder
+crop_images_in_folder(input_folder, output_folder, crop_geometry)
