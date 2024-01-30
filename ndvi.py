@@ -54,9 +54,9 @@ output_ndvi_path = "JOHALVSAT/data/cropped/ndvi_image.tif"
 
 
 
-            # Calculate and save NDVI, then display the NDVI image
-            calculate_ndvi(band4_path, band8_path, output_ndvi_path)
-            #display_ndvi(output_ndvi_path, colormap, vmin, vmax)
+        # Calculate and save NDVI, then display the NDVI image
+calculate_ndvi(band4_path, band8_path, output_ndvi_path)
+        #display_ndvi(output_ndvi_path, colormap, vmin, vmax)
 # Replace with the actual path to your output NDVI folder
 output_ndvi_folder = "data/ndvi"
 
