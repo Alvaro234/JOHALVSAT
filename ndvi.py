@@ -39,10 +39,9 @@ def calculate_ndvi_for_all_years(cropped_folder, output_ndvi_folder, colormap='v
             band4_path = os.path.join(cropped_folder, filename)
             band8_path = os.path.join(cropped_folder, filename.replace("B04", "B08"))
 
-<<<<<<< Updated upstream
             # Output NDVI path for each scene
             output_ndvi_path = os.path.join(output_ndvi_folder, f"ndvi_{year}_{os.path.splitext(filename)[0]}.tif")
-=======
+
 # Replace with the actual paths to your cropped band 4 and band 8 images
 #band4_path = "data/cropped/cropped_2023_B04_20m.jp2"
 #band8_path = "data/cropped/cropped_2023_B8A_20m.jp2"
@@ -54,7 +53,6 @@ band8_path = "JOHALVSAT/data/cropped/cropped_2023_B08_10m.jp2"
 output_ndvi_path = "JOHALVSAT/data/cropped/ndvi_image.tif"
 
 
->>>>>>> Stashed changes
 
             # Calculate and save NDVI, then display the NDVI image
             calculate_ndvi(band4_path, band8_path, output_ndvi_path)
