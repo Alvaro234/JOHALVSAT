@@ -23,7 +23,7 @@ def calculate_ndvi_for_all_years(cropped_folder, output_ndvi_folder, colormap='v
 
             # Calculate and save NDVI, then display the NDVI image
             calculate_ndvi(band4_path, band8_path, output_ndvi_path)
-            display_ndvi(output_ndvi_path, colormap, vmin, vmax)
+            #display_ndvi(output_ndvi_path, colormap, vmin, vmax)
 
 def calculate_ndvi(band4_path, band8_path, output_ndvi_path):
     with rasterio.open(band4_path) as src4, rasterio.open(band8_path) as src8:
