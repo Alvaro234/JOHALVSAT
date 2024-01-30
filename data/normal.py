@@ -6,12 +6,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
+image_dir = "JOHALVSAT/data/cropped"
 #image_path = "JOHALVSAT/data/cropped/cropped_2021_B04_10m.jp2"
 image_path = "JOHALVSAT/data/cropped/cropped_2021_B08_10m.jp2"
 #image_path2 = "data/cropped/cropped_2023_B08_10m.jp2"
 #image_path3 = "data/cropped/cropped_2024_B08_10m.jp2"
 
+for filename in os.listdir(image_dir):
+    if filename.endswith('B04_10m.jp2'):
 
+    else
 
 # Load the image
 image = cv2.imread(image_path)
