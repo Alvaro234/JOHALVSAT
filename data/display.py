@@ -2,14 +2,16 @@ import rasterio
 import matplotlib.pyplot as plt
 import PIL as PIL
 # Replace with the actual paths to your Sentinel-2 images
-image_path = "data/cropped/cropped_2023_B04_10m.jp2"
-image_path1 = "data/cropped/cropped_2024_B04_10m.jp2"
-image_path2 = "data/cropped/cropped_2023_B08_10m.jp2"
-image_path3 = "data/cropped/cropped_2024_B08_10m.jp2"
+image_path = "data/combined_output/2024_combined.tif"
+image_path1 = "data/cropped_combined/cropped_T29SQA_20240121T111259_B02_10m.jp2"
+image_path2 = "data/cropped_combined/cropped_T29SQA_20240121T111259_B03_10m.jp2"
+image_path3 = "data/cropped_combined/cropped_T29SQA_20240121T111259_B08_10m.jp2"
+
+
 
 def display_image(ax, image_path, title):
     with rasterio.open(image_path) as src:
-        ax.imshow(src.read(1), cmap='gray')
+        ax.imshow(src.read(1))
         ax.set_title(title)
         ax.axis('off')
         

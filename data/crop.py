@@ -63,7 +63,7 @@ crop_images_in_folder(input_folder, output_folder, crop_geometry)
 
 
 
-## Debugging
+""" ## Debugging
 
 image_path = "data/cropped/cropped_2023_B04_10m.jp2"
 image_path1 = "data/cropped/cropped_2024_B04_10m.jp2"
@@ -86,4 +86,4 @@ display_image(axs[1, 0], image_path2, "Image 3")
 display_image(axs[1, 1], image_path3, "Image 4")
 
 plt.tight_layout()
-plt.show()
+plt.show() """
