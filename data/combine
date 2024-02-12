@@ -6,15 +6,11 @@ from PIL import Image
 
 def find_band_paths(cropped_folder, year):
     band_paths = []
-    valid_band_suffixes = ["B02", "B03", "B04"] ## , "B08"
-
+    valid_band_suffixes = ["B04", "B03", "B02"]  # Add more bands here if needed
     for filename in os.listdir(cropped_folder):
         if filename.endswith("_10m.jp2") and any(suffix in filename for suffix in valid_band_suffixes) and year in filename:
             band_paths.append(os.path.join(cropped_folder, filename))
-    
     return band_paths
-
-
 
 def combine_and_save_bands(cropped_folder, output_folder, year):
     # Find the paths of the bands for the given year
@@ -27,10 +23,13 @@ def combine_and_save_bands(cropped_folder, output_folder, year):
     combined_image = np.stack(bands, axis=0)
 
     # Normalize the image to [0, 255]
-    combined_image = (combined_image / 65535.0 * 255).astype(np.uint8)
+    combined_image = (combined_image / np.max(combined_image)) * 255
 
     # Transpose to switch the axis order to (height, width, channels)
     combined_image = np.transpose(combined_image, (1, 2, 0))
+
+    # Convert to uint8
+    combined_image = combined_image.astype(np.uint8)
 
     # Save the combined image as a PNG file
     output_path = os.path.join(output_folder, f"{year}_combined.png")
