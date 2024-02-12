@@ -2,6 +2,7 @@ import os
 import rasterio
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
 
 def find_band_paths(cropped_folder, year):
     band_paths = []
@@ -19,38 +20,21 @@ def combine_and_save_bands(cropped_folder, output_folder, year):
     # Find the paths of the bands for the given year
     band_paths = find_band_paths(cropped_folder, year)
 
-    # Print the found band paths for debugging
-    print(f"Band paths for {year}: {band_paths}")
-
     # Read the bands into numpy arrays
     bands = [rasterio.open(band_path).read(1) for band_path in band_paths]
-
-    # Print the shape of each band for debugging
-    for band, band_path in zip(bands, band_paths):
-        print(f"Shape of {band_path}: {band.shape}")
 
     # Combine the bands into a single array
     combined_image = np.stack(bands, axis=0)
 
-    # Get the metadata from one of the input bands
-    band_meta = rasterio.open(band_paths[0]).meta.copy()
+    # Normalize the image to [0, 255]
+    combined_image = (combined_image / 65535.0 * 255).astype(np.uint8)
 
-    # Update metadata for the combined image
-    band_meta.update({
-        'count': combined_image.shape[0],
-        'dtype': 'uint16',  # You can change the dtype if needed
-        'compress': 'lzw'
-    })
+    # Transpose to switch the axis order to (height, width, channels)
+    combined_image = np.transpose(combined_image, (1, 2, 0))
 
-    # Create the output folder if it doesn't exist
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Output path for the combined image
-    output_path = os.path.join(output_folder, f"{year}_combined.tif")
-
-    # Save the combined image
-    with rasterio.open(output_path, 'w', **band_meta) as dst:
-        dst.write(combined_image)
+    # Save the combined image as a PNG file
+    output_path = os.path.join(output_folder, f"{year}_combined.png")
+    Image.fromarray(combined_image).save(output_path)
 
     print(f"Combined image for {year} saved successfully at: {output_path}")
 
@@ -64,5 +48,3 @@ years_to_process = ["2021", "2022", "2023", "2024"]
 # Combine and save bands for each year
 for year in years_to_process:
     combine_and_save_bands(cropped_folder, output_folder, year)
-
-display_rgb_image("data/combined_output/2021_combined_rgb.tif")

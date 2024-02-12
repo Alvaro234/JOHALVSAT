@@ -26,4 +26,4 @@ def display_rgb_image(image_path):
         plt.show()
 
 
-display_rgb_image("data/combined_output/2021_combined_rgb.tif")
+display_rgb_image("data/combined_output/2021_combined.png")
