@@ -1,10 +1,11 @@
 import os
 import rasterio
 import numpy as np
+import matplotlib.pyplot as plt
 
 def find_band_paths(cropped_folder, year):
     band_paths = []
-    valid_band_suffixes = ["B02", "B03", "B04", "B08"]
+    valid_band_suffixes = ["B02", "B03", "B04"] ## , "B08"
 
     for filename in os.listdir(cropped_folder):
         if filename.endswith("_10m.jp2") and any(suffix in filename for suffix in valid_band_suffixes) and year in filename:
@@ -63,3 +64,5 @@ years_to_process = ["2021", "2022", "2023", "2024"]
 # Combine and save bands for each year
 for year in years_to_process:
     combine_and_save_bands(cropped_folder, output_folder, year)
+
+display_rgb_image("data/combined_output/2021_combined_rgb.tif")
