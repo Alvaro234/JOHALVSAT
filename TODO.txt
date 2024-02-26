@@ -1,8 +1,10 @@
 - Get combined RGB+Near IR images
-- Use Labelme software to recognise
-    - Farmland
-    - Wetlands
-    - Dunes, sand
-    - Water
-- Obtain farmlands expansion tren
+- Use Labelme software to make polygons for
+    - Farmland DONE
+    - Wetlands DONE
+    - Dunes, sand DONE
+    - Water DONE
+- Figure out how to use polygons
+- 
+- Obtain farmlands expansion trend
 - Obtain wetlands expansion/contraction
