@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
 import earthpy.plot as ep
+import imageio
 
 # Load the individual channel images (red, green, blue, yellow)
 red_channel = rasterio.open('data\cropped_bands\cropped_2021_B04_10m.jp2').read(1)
@@ -51,10 +52,15 @@ def ndvi_calc(band4,band8):
     return ndvi
 NDVI = ndvi_calc(red_channel,nir_channel)
 
+
+
 print(red_channel[100,100])
 print(nir_channel[100,100])
 print((NDVI)[100,100])
-ep.plot_bands(NDVI, cmap = 'RdYlGn', title = 'NDVI map')
-
+#ep.plot_bands(NDVI, cmap = 'RdYlGn', title = 'NDVI map')
 water = NDVI < 0
-ep.plot_bands(water, cmap = 'Blues', title = 'NDVI map')
+#ep.plot_bands(water, cmap = 'Blues', title = 'NDVI map')
+
+# Save the NDVI array directly as a PNG file
+imageio.imwrite("data/ndvi/ndvi_2021.png", NDVI)
+
