@@ -1,4 +1,4 @@
-- Get combined RGB+Near IR images
+- Get  RGB + NDVI images  DONE
 - Use Labelme software to make polygons for
     - Farmland DONE
     - Wetlands DONE
