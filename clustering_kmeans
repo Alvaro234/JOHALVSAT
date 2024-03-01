@@ -11,7 +11,7 @@ with rasterio.open('data/ndvi/2021_ndvi.tif') as src:
 X = img.flatten().reshape((-1, 1))
 print(X.shape)
 
-k_means = cluster.KMeans(n_clusters=16)
+k_means = cluster.KMeans(n_clusters=4)
 k_means.fit(X)
 
 X_cluster = k_means.labels_
