@@ -34,6 +34,12 @@ gamma_corrected_image = np.clip(rgb_image ** (1/gamma), 0, 255).astype(np.uint8)
 print(rgb_image[100,100,1])
 print(gamma_corrected_image[100,100,1])
 
+# Save the RGB image as a PNG file
+output_png_file = 'data/ndvi/2024_output_rgb_image.png'
+imageio.imwrite(output_png_file, gamma_corrected_image)
+
+print(f"RGB image saved to {output_png_file}")
+
 # Display the image
 plt.imshow(gamma_corrected_image)
 plt.axis('off')  # Hide axes
