@@ -19,15 +19,58 @@ with open('JOHALVSAT\data\polygons.json', 'r') as f:
 image_height = labelme_data['imageHeight']
 image_width = labelme_data['imageWidth']
 
+## DON'T CHANGE ANYTHING BEFORE THIS POINT
 
-# Initialize mask
-mask = np.zeros((image_height, image_width), dtype=np.uint8)
 
-# Works until this point
+# Function to generate mask for a specific label
+def generate_mask(label, image_height, image_width, annotations):
+    mask = np.zeros((image_height, image_width), dtype=np.uint8)
+    for annotation in annotations:
+        if annotation['label'] == label:
+            polygon = np.array(annotation['points'], dtype=np.int32).reshape((-1, 2))
+            polygon_mask = np.zeros((image_height, image_width), dtype=np.uint8)
+            cv2.fillPoly(polygon_mask, [polygon], 255)
+            mask = cv2.bitwise_or(mask, polygon_mask)
+    return mask
+
+# Get image dimensions
+image_height = labelme_data['imageHeight']
+image_width = labelme_data['imageWidth']
+
+# Initialize masks
+mask_pines = generate_mask("PINES", image_height, image_width, labelme_data['shapes'])
+mask_dunes = generate_mask("DUNES", image_height, image_width, labelme_data['shapes'])
+mask_crops = generate_mask("CROPS", image_height, image_width, labelme_data['shapes'])
+mask_wetlands = generate_mask("WETLANDS", image_height, image_width, labelme_data['shapes'])
+
+
+# Combine masks
+combined_mask_temp = cv2.bitwise_or(mask_pines, mask_dunes)
+combined_mask = cv2.bitwise_or(combined_mask_temp, mask_crops)
+combined_mask = cv2.bitwise_or(combined_mask, mask_wetlands)
+cv2.imwrite('pines.png', combined_mask)
+#TESTING Save the combined mask as a PNG image
+
+#cv2.imwrite('pines.png', mask_pines)
+#cv2.imwrite('crops.png', mask_crops)
+#cv2.imwrite('wetlands.png', mask_wetlands)
+#cv2.imwrite('dunes.png', mask_dunes)
+
+# Save the combined mask as a TIFF image
+cv2.imwrite('pines.tif', mask_pines)
+cv2.imwrite('crops.tif', mask_crops)
+cv2.imwrite('wetlands.tif', mask_wetlands)
+cv2.imwrite('dunes.tif', mask_dunes)
+
+"""
+
+
 
 # Iterate through annotations
 for annotation in labelme_data['shapes']:
     # Extract polygon vertices
+    
+
     polygon = np.array(annotation['points'], dtype=np.int32)
     polygon = polygon.reshape((-1, 2))
 
@@ -36,15 +79,14 @@ for annotation in labelme_data['shapes']:
     cv2.fillPoly(polygon_mask, [polygon], 255)
 
     # Add polygon mask to the overall mask
-    mask = cv2.bitwise_or(mask, polygon_mask)
+    mask2 = cv2.bitwise_or(mask, polygon_mask)
 
 
 # Save the mask as an image
 cv2.imwrite('mask.png', mask)
 
+# Works until this point
 
-
-"""
 # Read JSON data
 ##JOHALVSAT\data\combined_output\polygons.json Relative path 
 #with open('polygons.json', 'r') as f:
