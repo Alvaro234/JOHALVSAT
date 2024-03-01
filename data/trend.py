@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+import os
 
 
 
@@ -9,11 +9,13 @@ import numpy as np
 with open('polygons.json', 'r') as f:
     json_data = json.load(f)
 
-with open()
+image_dir = 'JOHALVSAT\data\ndvi'
+for filename in os.listdir(image_dir):
+    if filename.endswith('.jpg'):
 # Check the values inside the each polygon and compare them to other years
 
-for polygon in json_data['polygons']:
-    print('Polygon Name:', polygon['name'])
+    for polygon in json_data['polygons']:
+        print('Polygon Name:', polygon['name'])
     
     # Extract polygon coordinates
     points = polygon['points']
