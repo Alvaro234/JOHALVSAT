@@ -1,65 +1,71 @@
-import json
 import numpy as np
 import os
 import rasterio
 import geopandas as gpd
 from rasterio.mask import mask
 import cv2
+import matplotlib.pyplot as plt
+import json
 
-#'JOHALVSAT/data/masks/crops.tif'
-#'JOHALVSAT/data/masks/wetlands.tif'
-#'JOHALVSAT/data/masks/dunes.tif'
-#'JOHALVSAT/data/masks/pines.tif'
+# Load masks
+masks_dir = 'data/masks/'
+mask_files = [f for f in os.listdir(masks_dir) if f.endswith('.tif')]
 
-#'JOHALVSAT/data/ndvi/2021_ndvi.tif'
-#'JOHALVSAT/data/ndvi/2022_ndvi.tif'
-#'JOHALVSAT/data/ndvi/2023_ndvi.tif'
-#'JOHALVSAT/data/ndvi/2024_ndvi.tif'
+# Loop through NDVI images
+ndvi_dir = 'data/ndvi/'
+ndvi_files = [f for f in os.listdir(ndvi_dir) if f.endswith('.tif')]
 
+i=0
+avg_array = np.zeros((len(ndvi_files)*len(mask_files),2))
 
-# Paths to directories
-tif_directory = 'JOHALVSAT/data/ndvi'
-mask_directory = 'JOHALVSAT/data/masks'
-
-# List of masks to apply
-mask_labels = ["crops", "dunes", "pines", "wetlands"]
-
-# Initialize vector to store resulting images
-result_images = []
-
-# Iterate over TIFF images in the directory
-for filename in os.listdir(tif_directory):
-    if filename.endswith('.tif'):
-        # Load TIFF image
-        tif_path = os.path.join(tif_directory, filename)
-        with rasterio.open(tif_path, 'r') as src:
-            tif_image = src.read()
-
-        # Get image dimensions
-        image_height, image_width, _ = tif_image.shape
+for ndvi_file in ndvi_files:
+    ndvi_path = os.path.join(ndvi_dir, ndvi_file)
+    
+    ndvi_image = rasterio.open(ndvi_path).read(1)
+    
+    for mask_file in mask_files:
+    
+        mask_path = os.path.join(masks_dir, mask_file)
         
-        # Initialize mask to store combined masks
-        combined_mask = np.zeros((image_height, image_width), dtype=np.uint8)
-        
-        # Iterate over mask labels
-        for label in mask_labels:
-            # Load mask
-            mask_filename = f"{label}.tif"
-            mask_path = os.path.join(mask_directory, mask_filename)
-            with rasterio.open(mask_path, 'r') as src:
-                mask_image = src.read(1)
-            
-            # Generate mask for current label
-            current_mask = generate_mask(label, image_height, image_width, mask_image)
-            
-            # Combine masks
-            combined_mask = cv2.bitwise_or(combined_mask, current_mask)
-        
-        # Apply combined mask to TIFF image
-        masked_image = cv2.bitwise_and(tif_image, tif_image, mask=combined_mask)
-        
-        # Append resulting image to vector
-        result_images.append(masked_image)
+        crops_mask = rasterio.open(mask_path).read(1) / 255
 
-# Convert list of images to numpy array
-result_images = np.array(result_images)
+        crops_mask = np.ma.masked_equal(crops_mask, np.nan)
+        plt.imshow(crops_mask)
+        masked_image = ndvi_image*crops_mask
+        
+        
+        # Mask generation
+        #masked_image = crops_mask * ndvi_image
+        ############################## Save #####################
+
+        # Define output file path
+        output_file = os.path.join('data/output', f"{ndvi_file[:-4]}_{mask_file[:-4]}.tif")
+        # Define metadata
+        metadata = {
+            'driver': 'GTiff',
+            'dtype': 'float32',  # Adjust data type as needed
+            'count': 1,  # Number of bands
+            'height': masked_image.shape[0],  # Height of the array
+            'width': masked_image.shape[1],  # Width of the array
+        }
+        # Write to a new TIFF file
+        with rasterio.open(output_file, 'w', **metadata) as dst:
+            dst.write(masked_image, 1)  # Assuming NDVI is stored in the first band
+
+        print(f"Masked NDVI image saved to {output_file}")
+        # Display the image
+        plt.imshow(masked_image)
+        plt.axis('off')  # Hide axes
+        plt.title(f'NDVI masked with {mask_file}')
+        plt.show()
+
+        ############################## Save ######################
+        masked_image = np.ma.masked_less_equal(masked_image, 0)
+        avg = np.mean(masked_image)
+        print(f"Average NDVI with mask {mask_file}: {avg}")
+        
+        avg_array[i,0] = i
+        avg_array[i,1] = avg
+        i = i+1
+
+
