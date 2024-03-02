@@ -1,2 +1,0 @@
-- Obtain farmlands expansion trend
-- Obtain wetlands expansion/contraction
