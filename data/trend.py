@@ -45,10 +45,14 @@ mask_wetlands = generate_mask("WETLANDS", image_height, image_width, labelme_dat
 
 
 # Combine masks
-combined_mask_temp = cv2.bitwise_or(mask_pines, mask_dunes)
-combined_mask = cv2.bitwise_or(combined_mask_temp, mask_crops)
-combined_mask = cv2.bitwise_or(combined_mask, mask_wetlands)
-cv2.imwrite('pines.png', combined_mask)
+#combined_mask_temp = cv2.bitwise_or(mask_pines, mask_dunes)
+#combined_mask = cv2.bitwise_or(combined_mask_temp, mask_crops)
+#combined_mask = cv2.bitwise_or(combined_mask, mask_wetlands)
+
+cv2.imwrite('combined.png', combined_mask)
+
+
+
 #TESTING Save the combined mask as a PNG image
 
 #cv2.imwrite('pines.png', mask_pines)
@@ -56,11 +60,17 @@ cv2.imwrite('pines.png', combined_mask)
 #cv2.imwrite('wetlands.png', mask_wetlands)
 #cv2.imwrite('dunes.png', mask_dunes)
 
+# Get the directory of the source image file
+source_image_path = 'path_to_source_image.jpg'  # Replace with the actual path to the source image file
+output_directory = os.path.dirname(source_image_path) 
+
 # Save the combined mask as a TIFF image
 cv2.imwrite('pines.tif', mask_pines)
 cv2.imwrite('crops.tif', mask_crops)
 cv2.imwrite('wetlands.tif', mask_wetlands)
 cv2.imwrite('dunes.tif', mask_dunes)
+
+
 
 """
 
